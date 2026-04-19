@@ -18,6 +18,7 @@ public class DespesaController
         view.ListagemDespesasSolicitada += OnListagemDespesasSolicitada;
         view.TotalDespesasSolicitado += OnTotalDespesasSolicitado;
         view.SaidaSolicitada += OnSaidaSolicitada;
+        view.ListagemPorCategoriaSolicitada += OnListagemPorCategoriaSolicitada;
     }
 
     public void Iniciar()
@@ -42,6 +43,13 @@ public class DespesaController
     private void OnListagemDespesasSolicitada()
     {
         var despesas = gestor.ObterTodasDespesas();
+        view.MostrarDespesas(despesas);
+    }
+
+    private void OnListagemPorCategoriaSolicitada()
+    {
+        var categoria = view.LerCategoria();
+        var despesas = gestor.ObterDespesasPorCategoria(categoria);
         view.MostrarDespesas(despesas);
     }
 
