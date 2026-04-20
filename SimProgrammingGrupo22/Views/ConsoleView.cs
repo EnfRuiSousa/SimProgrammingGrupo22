@@ -4,8 +4,28 @@ using SimProgrammingGrupo22.Models;
 
 namespace SimProgrammingGrupo22.Views
 {
+    public delegate void SemParametrosHandler();
+    public delegate void DespesaHandler(Despesa despesa);
+
     public class ConsoleView
     {
+        public event SemParametrosHandler AdicionarDespesaSolicitada;
+        public event DespesaHandler DespesaIntroduzida;
+        public event SemParametrosHandler ListagemDespesasSolicitada;
+        public event SemParametrosHandler ListagemPorCategoriaSolicitada;
+        public event SemParametrosHandler TotalDespesasSolicitado;
+        public event SemParametrosHandler SaidaSolicitada;
+
+        public void Iniciar()
+        {
+            while (true)
+            {
+                MostrarMenu();
+                LerOpcao();
+                Console.WriteLine();
+            }
+        }
+
         public void MostrarMenu()
         {
             Console.WriteLine("===== GESTÃO DE DESPESAS =====");
@@ -17,7 +37,7 @@ namespace SimProgrammingGrupo22.Views
             Console.WriteLine();
         }
 
-        public int LerOpcao()
+        public void LerOpcao()
         {
             int opcao;
 
@@ -27,10 +47,35 @@ namespace SimProgrammingGrupo22.Views
             }
             while (!int.TryParse(Console.ReadLine(), out opcao));
 
-            return opcao;
+            switch (opcao)
+            {
+                case 1:
+                    AdicionarDespesaSolicitada?.Invoke();
+                    break;
+
+                case 2:
+                    ListagemDespesasSolicitada?.Invoke();
+                    break;
+
+                case 3:
+                    ListagemPorCategoriaSolicitada?.Invoke();
+                    break;
+
+                case 4:
+                    TotalDespesasSolicitado?.Invoke();
+                    break;
+
+                case 0:
+                    SaidaSolicitada?.Invoke();
+                    break;
+
+                default:
+                    MostrarMensagem("Opção inválida.");
+                    break;
+            }
         }
 
-        public Despesa LerNovaDespesa()
+        public void LerNovaDespesa()
         {
             Console.Write("Descrição: ");
             string descricao = Console.ReadLine();
@@ -51,13 +96,15 @@ namespace SimProgrammingGrupo22.Views
             }
             while (!DateTime.TryParse(Console.ReadLine(), out data));
 
-            return new Despesa
+            Despesa despesa = new Despesa
             {
                 Descricao = descricao,
                 Valor = valor,
                 Categoria = categoria,
                 Data = data
             };
+
+            DespesaIntroduzida?.Invoke(despesa);
         }
 
         public CategoriaDespesa LerCategoria()
@@ -113,5 +160,4 @@ namespace SimProgrammingGrupo22.Views
             Console.WriteLine($"Total das despesas: {total} €");
         }
     }
-
 }

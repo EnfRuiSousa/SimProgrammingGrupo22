@@ -5,84 +5,62 @@ public class DespesaController
 {
     private GestorDespesas gestor;
     private ConsoleView view;
+
     public DespesaController(GestorDespesas gestor, ConsoleView view)
     {
         this.gestor = gestor;
         this.view = view;
-    }
 
-    public static void Main()
-    {
-        var gestor = new GestorDespesas();
-        var view = new ConsoleView();
-        var controller = new DespesaController(gestor, view);
-        controller.Iniciar();
+        // Subscrição dos eventos da View
+
+        view.AdicionarDespesaSolicitada += OnAdicionarDespesaSolicitada;
+        view.DespesaIntroduzida += OnDespesaIntroduzida;
+        view.ListagemDespesasSolicitada += OnListagemDespesasSolicitada;
+        view.TotalDespesasSolicitado += OnTotalDespesasSolicitado;
+        view.SaidaSolicitada += OnSaidaSolicitada;
+        view.ListagemPorCategoriaSolicitada += OnListagemPorCategoriaSolicitada;
     }
 
     public void Iniciar()
     {
-        bool sair = false;
-        while (!sair)
-        {
-            // inserir quando tiver a view 
-            view.MostrarMenu();
-            int opcao = view.LerOpcao();
-            switch (opcao)
-            {
-                case 0:
-                    sair = true;
-                    break;
-                case 1:
-                    AdicionarDespesa();
-                    break;
-                case 2:
-                    ListarDespesas();
-                    break;
-                case 3:
-                    ListarDespesasPorCategoria();
-                    break;
-                case 4:
-                    MostrarTotal();
-                    break;
-                default:
-                    view.mostrarMensagem("Opção inválida. Tente novamente.");
-                    break;
-            }
-        }
+        //ciclo na view
+        view.Iniciar();
     }
 
-    public void AdicionarDespesa()
+    // Handlers dos eventos
+
+    private void OnAdicionarDespesaSolicitada()
     {
-        // var despesa = view.LerNovaDespesa(); 
-        //Inserir quando tiver o model 
-        //gestor.AdicionarDespesa(despesa);
-        //Inserir quando tiver a view 
-        //view.MostrarMensagem("Despesa adicionada com sucesso!");
+        view.LerNovaDespesa();
     }
 
-    public void ListarDespesas()
+    private void OnDespesaIntroduzida(Despesa despesa)
     {
-        //Inserir quando tiver o Model 
-        //var despesas = gestor.listarDespesas(); 
-        //Inserir quando tiver a view 
-        //view.MostrarDespesas(despesas);
-
+        gestor.AdicionarDespesa(despesa);
+        view.MostrarMensagem("Despesa adicionada com sucesso!");
     }
-    public void ListarDespesasPorCategoria()
+
+    private void OnListagemDespesasSolicitada()
     {
-        // Inserir quando tiver a view 
-        //var categoria = view.LerCategoria();
-        //Inserir quando tiver o Model 
-        //var despesas = gestor.listarDespesasPorCategoria(CategoriaDespesa);
-        //Inserir quando tiver a view 
-        //view.mostrarDespesasPorCategoria(despesasPorCategoria);
+        var despesas = gestor.ObterTodasDespesas();
+        view.MostrarDespesas(despesas);
     }
 
-    public void MostrarTotal()
+    private void OnListagemPorCategoriaSolicitada()
     {
-        //Inserir quando tiver o model 
-        //var total = gestor.calcularTotal(); 
-        //Inserir quando tiver a view 
-        //view.MostrarTotal(total);
+        var categoria = view.LerCategoria();
+        var despesas = gestor.ObterDespesasPorCategoria(categoria);
+        view.MostrarDespesas(despesas);
     }
 
+    private void OnTotalDespesasSolicitado()
+    {
+        var total = gestor.CalcularTotal();
+        view.MostrarTotal(total);
+    }
+
+    private void OnSaidaSolicitada()
+    {
+        Environment.Exit(0);
+    }
+}
