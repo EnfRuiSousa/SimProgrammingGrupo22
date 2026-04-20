@@ -9,77 +9,24 @@ namespace SimProgrammingGrupo22.Models
     {
         // --- METODOS CONTROLLER ---
 
-        /* adicionarDespesa(despesa) 
+        /* AdicionarDespesa(despesa) 
          * <- DespesasObtidas (?)
          * -> mensagem de sucesso ou erro
          * */
 
-        /* obterTodasDespesas() 
+        /* ObterTodasDespesas() 
          * <- preciso buscar ao json
          * -> ListaDespesas
          * */
 
-        /* obterDespesasPorCategoria(categoria) 
+        /* ObterDespesasPorCategoria(categoria) 
          * <- preciso buscar ao json filtrando por categoria
          * -> ListaDespesasCategoria
          */
 
-        /* calcularTotal() 
+        /* CalcularTotal() 
          * <- preciso buscar ao json e somar os valores
          * -> total
-         */
-
-        
-
-        
-
-    }
-
-    // -- METODOS VIEW ---
-
-    /* ListaDespesaAtualizada() 
-     * <- preciso buscar ao json
-     * -> ListaDespesas
-     */
-
-    /* DadosParaApresentacao() 
-     * <- preciso buscar ao json e formatar os dados para apresentação
-     * -> ListaDespesas
-     */
-
-    /* TotalAtualizado() 
-     * <- preciso buscar ao json e calcular o total
-     * -> total
-     */
-
-
-
-    class Despesa
-    {
-        // descricao
-        // valor
-        // categoria
-        // data
-    }
-
-    class CategoriaDespesa
-    {
-        // Alimentação
-        // Transporte
-        // Lazer
-        // Saúde
-    }
-
-   class jsonRepository
-    {
-        /* LerDespesas() 
-         * <- preciso ler o json
-         * -> ListaDespesas
-         */
-
-        /* GuardarDespesas() 
-         * <- preciso guardar a lista de despesas no json
-         * -> DadosAtualizados / mensagem de sucesso ou erro(?)
          */
 
     }
