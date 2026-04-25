@@ -1,6 +1,8 @@
+using SimProgrammingGrupo22.Models;
 using System;
 using System.Collections.Generic;
-using SimProgrammingGrupo22.Models;
+using System.Drawing;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SimProgrammingGrupo22.Views
 {
@@ -77,7 +79,7 @@ namespace SimProgrammingGrupo22.Views
 
         public void LerNovaDespesa()
         {
-            Console.Write("Descrição: ");
+            Console.Write("Descricao: ");
             string descricao = Console.ReadLine();
 
             decimal valor;
@@ -96,13 +98,8 @@ namespace SimProgrammingGrupo22.Views
             }
             while (!DateTime.TryParse(Console.ReadLine(), out data));
 
-            Despesa despesa = new Despesa
-            {
-                Descricao = descricao,
-                Valor = valor,
-                Categoria = categoria,
-                Data = data
-            };
+
+            Despesa despesa = new Despesa(descricao, valor, categoria, data);
 
             DespesaIntroduzida?.Invoke(despesa);
         }

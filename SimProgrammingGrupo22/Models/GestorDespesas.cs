@@ -6,7 +6,7 @@ using System.Text;
 namespace SimProgrammingGrupo22.Models
 {
     /* FUNÇÃO GestorDespesas */
-    internal class GestorDespesas
+    public class GestorDespesas
     {
         // Ficheiro JSON onde as despesas são guardadas
         private readonly JsonRepository _repo;
