@@ -6,9 +6,14 @@ namespace SimProgrammingGrupo22.Models
 {
     public enum CategoriaDespesa
     {
-            Alimentacao,
-            Transporte,
-            Lazer,
-            Saude
-       }
+        Energia,
+        Agua,
+        Mercearia,
+        Roupas,
+        Telemovel,
+        Carro,
+        Saude,
+        Educacao,
+        Outra
+    }
 }
