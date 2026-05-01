@@ -1,8 +1,6 @@
 using SimProgrammingGrupo22.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SimProgrammingGrupo22.Views
 {
@@ -54,23 +52,18 @@ namespace SimProgrammingGrupo22.Views
                 case 1:
                     AdicionarDespesaSolicitada?.Invoke();
                     break;
-
                 case 2:
                     ListagemDespesasSolicitada?.Invoke();
                     break;
-
                 case 3:
                     ListagemPorCategoriaSolicitada?.Invoke();
                     break;
-
                 case 4:
                     TotalDespesasSolicitado?.Invoke();
                     break;
-
                 case 0:
                     SaidaSolicitada?.Invoke();
                     break;
-
                 default:
                     MostrarMensagem("Opção inválida.");
                     break;
@@ -79,8 +72,14 @@ namespace SimProgrammingGrupo22.Views
 
         public void LerNovaDespesa()
         {
-            Console.Write("Descricao: ");
-            string descricao = Console.ReadLine();
+            string descricao;
+
+            do
+            {
+                Console.Write("Descrição: ");
+                descricao = Console.ReadLine();
+            }
+            while (string.IsNullOrWhiteSpace(descricao));
 
             decimal valor;
             do
@@ -98,7 +97,6 @@ namespace SimProgrammingGrupo22.Views
             }
             while (!DateTime.TryParse(Console.ReadLine(), out data));
 
-
             Despesa despesa = new Despesa(descricao, valor, categoria, data);
 
             DespesaIntroduzida?.Invoke(despesa);
@@ -107,14 +105,14 @@ namespace SimProgrammingGrupo22.Views
         public CategoriaDespesa LerCategoria()
         {
             Console.WriteLine("Escolha uma categoria:");
-            Console.WriteLine("1 - energia");
-            Console.WriteLine("2 - agua");
+            Console.WriteLine("1 - Energia");
+            Console.WriteLine("2 - Água");
             Console.WriteLine("3 - Mercearia");
             Console.WriteLine("4 - Roupas");
-            Console.WriteLine("5 - Telemovel");
+            Console.WriteLine("5 - Telemóvel");
             Console.WriteLine("6 - Carro");
-            Console.WriteLine("7 - Saude");
-            Console.WriteLine("8 - Educacao");
+            Console.WriteLine("7 - Saúde");
+            Console.WriteLine("8 - Educação");
             Console.WriteLine("9 - Outra");
 
             int opcao;
@@ -140,7 +138,7 @@ namespace SimProgrammingGrupo22.Views
             foreach (Despesa despesa in despesas)
             {
                 Console.WriteLine($"Descrição: {despesa.Descricao}");
-                Console.WriteLine($"Valor: {despesa.Valor} €");
+                Console.WriteLine($"Valor: {despesa.Valor:F2} €");
                 Console.WriteLine($"Categoria: {despesa.Categoria}");
                 Console.WriteLine($"Data: {despesa.Data:dd/MM/yyyy}");
                 Console.WriteLine("----------------------------");
@@ -154,7 +152,7 @@ namespace SimProgrammingGrupo22.Views
 
         public void MostrarTotal(decimal total)
         {
-            Console.WriteLine($"Total das despesas: {total} €");
+            Console.WriteLine($"Total das despesas: {total:F2} €");
         }
     }
 }
