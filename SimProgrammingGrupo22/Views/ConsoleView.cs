@@ -41,29 +41,35 @@ namespace SimProgrammingGrupo22.Views
         {
             int opcao;
 
-            do
+            Console.Write("Escolha uma opção: ");
+            while (!int.TryParse(Console.ReadLine(), out opcao))
             {
+                MostrarMensagem("Opção inválida. Introduza um número.");
                 Console.Write("Escolha uma opção: ");
             }
-            while (!int.TryParse(Console.ReadLine(), out opcao));
 
             switch (opcao)
             {
                 case 1:
                     AdicionarDespesaSolicitada?.Invoke();
                     break;
+
                 case 2:
                     ListagemDespesasSolicitada?.Invoke();
                     break;
+
                 case 3:
                     ListagemPorCategoriaSolicitada?.Invoke();
                     break;
+
                 case 4:
                     TotalDespesasSolicitado?.Invoke();
                     break;
+
                 case 0:
                     SaidaSolicitada?.Invoke();
                     break;
+
                 default:
                     MostrarMensagem("Opção inválida.");
                     break;
@@ -78,24 +84,33 @@ namespace SimProgrammingGrupo22.Views
             {
                 Console.Write("Descrição: ");
                 descricao = Console.ReadLine();
-            }
-            while (string.IsNullOrWhiteSpace(descricao));
+
+                if (string.IsNullOrWhiteSpace(descricao))
+                {
+                    MostrarMensagem("Descrição inválida. Não pode estar vazia.");
+                }
+
+            } while (string.IsNullOrWhiteSpace(descricao));
 
             decimal valor;
-            do
+
+            Console.Write("Valor: ");
+            while (!decimal.TryParse(Console.ReadLine(), out valor))
             {
+                MostrarMensagem("Valor inválido. Introduza um número válido.");
                 Console.Write("Valor: ");
             }
-            while (!decimal.TryParse(Console.ReadLine(), out valor));
 
             CategoriaDespesa categoria = LerCategoria();
 
             DateTime data;
-            do
+
+            Console.Write("Data (dd/MM/yyyy): ");
+            while (!DateTime.TryParse(Console.ReadLine(), out data))
             {
+                MostrarMensagem("Data inválida. Use o formato dd/MM/yyyy.");
                 Console.Write("Data (dd/MM/yyyy): ");
             }
-            while (!DateTime.TryParse(Console.ReadLine(), out data));
 
             Despesa despesa = new Despesa(descricao, valor, categoria, data);
 
@@ -116,18 +131,20 @@ namespace SimProgrammingGrupo22.Views
             Console.WriteLine("9 - Outra");
 
             int opcao;
-            do
+
+            Console.Write("Opção: ");
+            while (!int.TryParse(Console.ReadLine(), out opcao) || opcao < 1 || opcao > 9)
             {
+                MostrarMensagem("Categoria inválida. Escolha um valor entre 1 e 9.");
                 Console.Write("Opção: ");
             }
-            while (!int.TryParse(Console.ReadLine(), out opcao) || opcao < 1 || opcao > 9);
 
             return (CategoriaDespesa)(opcao - 1);
         }
 
         public void MostrarDespesas(List<Despesa> despesas)
         {
-            if (despesas.Count == 0)
+            if (despesas == null || despesas.Count == 0)
             {
                 Console.WriteLine("Não existem despesas registadas.");
                 return;
