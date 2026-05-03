@@ -14,24 +14,44 @@ namespace SimProgrammingGrupo22.Models
         // Lista em memória das despesas
         private readonly List<Despesa> _despesas;
 
+        public string? AvisoInicial { get; private set; }
+
         // Define-se o caminho do ficheiro JSON no construtor
         public GestorDespesas(string repoPath = "Models/repository.json")
         {
             _repo = new JsonRepository(repoPath);
 
-            // Verifica-se se o ficheiro existe através de LerDespesas
-            _despesas = _repo.LerDespesas();
+            try
+            {
+                // Tenta carregar as despesas guardadas no ficheiro JSON.
+                _despesas = _repo.LerDespesas();
+            }
+            catch (ErroPersistenciaException ex)
+            {
+                // Se o ficheiro JSON estiver corrompido, a aplicação arranca com lista vazia.
+                _despesas = new List<Despesa>();
+                AvisoInicial = ex.Message + " A aplicação será iniciada sem despesas carregadas.";
+            }
         }
 
         /*  FUNÇÃO AdicionarDespesa(despesa) */
         public void AdicionarDespesa(Despesa despesa)
         {
-            if (despesa == null) throw new ArgumentNullException(nameof(despesa));
+            if (despesa == null)
+                throw new ArgumentNullException(nameof(despesa));
 
-            // 1) Atualiza a lista em memória
+            // Validacao de regra de negocio: uma despesa deve ter descricao.
+            if (string.IsNullOrWhiteSpace(despesa.Descricao))
+                throw new ValidacaoDespesaException("A descrição da despesa não pode estar vazia.");
+
+            // Validacao de regra de negocio: uma despesa deve ter valor superior a zero.
+            if (despesa.Valor <= 0)
+                throw new ValidacaoDespesaException("O valor da despesa tem de ser superior a zero.");
+
+            // Se a despesa for valida, e adicionada primeiro em memoria.
             _despesas.Add(despesa);
 
-            // 2) Persiste a lista no ficheiro JSON (pode lançar em caso de I/O)
+            // Depois e persistida no ficheiro JSON.
             _repo.GuardarDespesas(_despesas);
         }
 
@@ -54,6 +74,5 @@ namespace SimProgrammingGrupo22.Models
         {
             return _despesas.Sum(d => Convert.ToDecimal(d.Valor));
         }
-
     }
 }

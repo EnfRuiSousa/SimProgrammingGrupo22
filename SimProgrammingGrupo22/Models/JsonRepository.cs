@@ -34,36 +34,57 @@ namespace SimProgrammingGrupo22.Models
         {
             try
             {
-                // Se o ficheiro não existir, devolve uma lista vazia
-                if (!File.Exists(_filePath)) return new List<Despesa>();
+                // Se o ficheiro nao existir, a aplicacao inicia com uma lista vazia.
+                if (!File.Exists(_filePath))
+                    return new List<Despesa>();
 
-                // Lê todo o conteúdo e escreve para List<Despesa> e devolve a lista
                 var json = File.ReadAllText(_filePath);
+
+                // Se o ficheiro existir mas estiver vazio, evita erro de desserializacao.
+                if (string.IsNullOrWhiteSpace(json))
+                    return new List<Despesa>();
+
                 return JsonSerializer.Deserialize<List<Despesa>>(json, _options) ?? new List<Despesa>();
             }
-            catch
+            catch (Exception ex)
             {
-                // Em caso de erro, devolve lista vazia para não bloquear a aplicação
-                return new List<Despesa>();
+                // Em vez de esconder o erro, lancamos uma excepcao propria para o Controller tratar.
+                throw new ErroPersistenciaException(
+                    "Não foi possível ler o ficheiro JSON das despesas.",
+                    ex
+                );
             }
         }
 
         /* FUNÇÃO GuardarDespesas */
         public void GuardarDespesas(List<Despesa> despesas)
         {
-            if (despesas == null) throw new ArgumentNullException(nameof(despesas));
+            if (despesas == null)
+                throw new ArgumentNullException(nameof(despesas));
 
-            // Verifica que o diretório existe antes de guardar
-            var dir = Path.GetDirectoryName(_filePath);
-            if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+            try
+            {
+                // Garante que a pasta de destino existe antes de escrever o ficheiro.
+                var dir = Path.GetDirectoryName(_filePath);
+                if (!string.IsNullOrEmpty(dir))
+                    Directory.CreateDirectory(dir);
 
-            // 1) escreve num ficheiro temporário
-            // 2) substitui o ficheiro final e limpa a memória
-            var tempFile = _filePath + ".tmp";
-            var json = JsonSerializer.Serialize(despesas, _options);
-            File.WriteAllText(tempFile, json);
-            File.Copy(tempFile, _filePath, overwrite: true);
-            File.Delete(tempFile);
+                // Escreve primeiro num ficheiro temporario para reduzir risco de corromper o JSON final.
+                var tempFile = _filePath + ".tmp";
+                var json = JsonSerializer.Serialize(despesas, _options);
+
+                File.WriteAllText(tempFile, json);
+                File.Copy(tempFile, _filePath, overwrite: true);
+                File.Delete(tempFile);
+            }
+            catch (Exception ex)
+            {
+                // Encapsula erros de escrita para o Controller conseguir apresentar mensagem adequada.
+                throw new ErroPersistenciaException(
+                    "Não foi possível guardar as despesas no ficheiro JSON.",
+                    ex
+                );
+            }
         }
     }
 }
