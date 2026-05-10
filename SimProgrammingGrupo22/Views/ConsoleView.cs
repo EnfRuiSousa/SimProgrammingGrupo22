@@ -1,6 +1,7 @@
 using SimProgrammingGrupo22.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SimProgrammingGrupo22.Views
 {
@@ -142,9 +143,9 @@ namespace SimProgrammingGrupo22.Views
             return (CategoriaDespesa)(opcao - 1);
         }
 
-        public void MostrarDespesas(List<Despesa> despesas)
+        public void MostrarDespesas(IEnumerable<IDadosDespesa> despesas)
         {
-            if (despesas == null || despesas.Count == 0)
+            if (despesas == null || !despesas.Any())
             {
                 Console.WriteLine("Não existem despesas registadas.");
                 return;
@@ -152,7 +153,7 @@ namespace SimProgrammingGrupo22.Views
 
             Console.WriteLine("===== LISTA DE DESPESAS =====");
 
-            foreach (Despesa despesa in despesas)
+            foreach (IDadosDespesa despesa in despesas)
             {
                 Console.WriteLine($"Descrição: {despesa.Descricao}");
                 Console.WriteLine($"Valor: {despesa.Valor:F2} €");
