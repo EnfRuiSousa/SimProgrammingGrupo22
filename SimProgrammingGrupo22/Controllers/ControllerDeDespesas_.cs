@@ -23,6 +23,10 @@ public class DespesaController
 
     public void Iniciar()
     {
+        if (!string.IsNullOrWhiteSpace(gestor.AvisoInicial))
+        {
+            view.MostrarMensagem(gestor.AvisoInicial);
+        }
         //ciclo na view
         view.Iniciar();
     }
