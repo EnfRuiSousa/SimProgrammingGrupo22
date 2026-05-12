@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SimProgrammingGrupo22.Models
 {
@@ -11,68 +10,55 @@ namespace SimProgrammingGrupo22.Models
         // Ficheiro JSON onde as despesas são guardadas
         private readonly JsonRepository _repo;
 
-        // Lista em memória das despesas
+        // Lista em memória das despesas (concreta, continua a usar Despesa)
         private readonly List<Despesa> _despesas;
-
-        public string? AvisoInicial { get; private set; }
 
         // Define-se o caminho do ficheiro JSON no construtor
         public GestorDespesas(string repoPath = "Models/repository.json")
         {
             _repo = new JsonRepository(repoPath);
 
-            try
-            {
-                // Tenta carregar as despesas guardadas no ficheiro JSON.
-                _despesas = _repo.LerDespesas();
-            }
-            catch (ErroPersistenciaException ex)
-            {
-                // Se o ficheiro JSON estiver corrompido, a aplicação arranca com lista vazia.
-                _despesas = new List<Despesa>();
-                AvisoInicial = ex.Message + " A aplicação será iniciada sem despesas carregadas.";
-            }
+            // Verifica-se se o ficheiro existe através de LerDespesas
+            _despesas = _repo.LerDespesas();
         }
 
         /*  FUNÇÃO AdicionarDespesa(despesa) */
-        public void AdicionarDespesa(Despesa despesa)
+        // Este metodo teve que ser colocado como internal pois estava sempre a dar erros de acessibilidade, 
+        // mesmo estando na mesma pasta
+        internal void AdicionarDespesa(Despesa despesa)
         {
-            if (despesa == null)
-                throw new ArgumentNullException(nameof(despesa));
+            if (despesa == null) throw new ArgumentNullException(nameof(despesa));
 
-            // Validacao de regra de negocio: uma despesa deve ter descricao.
-            if (string.IsNullOrWhiteSpace(despesa.Descricao))
-                throw new ValidacaoDespesaException("A descrição da despesa não pode estar vazia.");
-
-            // Validacao de regra de negocio: uma despesa deve ter valor superior a zero.
-            if (despesa.Valor <= 0)
-                throw new ValidacaoDespesaException("O valor da despesa tem de ser superior a zero.");
-
-            // Se a despesa for valida, e adicionada primeiro em memoria.
+            // 1) Atualiza a lista em memória
             _despesas.Add(despesa);
 
-            // Depois e persistida no ficheiro JSON.
+            // 2) Persiste a lista no ficheiro JSON (pode lançar em caso de I/O)
             _repo.GuardarDespesas(_despesas);
         }
 
         /* FUNÇÃO ObterTodasDespesas */
-        public List<Despesa> ObterTodasDespesas()
+        // Agora expõe a abstração IDadosDespesa para reduzir acoplamento com a View.
+        public List<IDadosDespesa> ObterTodasDespesas()
         {
-            return new List<Despesa>(_despesas);
+            // Cada Despesa implementa IDadosDespesa, por isso é seguro fazer cast
+            return _despesas.Cast<IDadosDespesa>().ToList();
         }
 
         /* FUNÇÃO ObterDespesasPorCategoria(categoria) */
-        public List<Despesa> ObterDespesasPorCategoria(CategoriaDespesa categoria)
+        // Tambem retorna IDadosDespesa
+        public List<IDadosDespesa> ObterDespesasPorCategoria(CategoriaDespesa categoria)
         {
             return _despesas
                 .Where(d => EqualityComparer<CategoriaDespesa>.Default.Equals(d.Categoria, categoria))
+                .Cast<IDadosDespesa>()
                 .ToList();
         }
 
         /* FUNÇÃO CalcularTotal() */
         public decimal CalcularTotal()
         {
-            return _despesas.Sum(d => Convert.ToDecimal(d.Valor));
+            return _despesas.Sum(d => d.Valor);
         }
+
     }
 }
