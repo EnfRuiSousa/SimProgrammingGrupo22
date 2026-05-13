@@ -113,7 +113,13 @@ namespace SimProgrammingGrupo22.Views
                 Console.Write("Data (dd/MM/yyyy): ");
             }
 
-            Despesa despesa = new Despesa(descricao, valor, categoria, data);
+            Despesa despesa = new Despesa
+            {
+                Descricao = descricao,
+                Valor = valor,
+                Categoria = categoria,
+                Data = data
+            };
 
             DespesaIntroduzida?.Invoke(despesa);
         }
