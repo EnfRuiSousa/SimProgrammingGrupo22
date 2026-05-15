@@ -14,6 +14,10 @@ namespace SimProgrammingGrupo22.Models
         // Opções do serializador JSON(como os dados ficaram guardados)
         private readonly JsonSerializerOptions _options;
 
+        // Marca se houve erro ao ler JSON
+        public bool HouveErroLeitura { get; private set; }
+
+
         // Construtor para definir o ficheiro e a sua serialização
         public JsonRepository(string filePath = "Models/repository.json")
         {
@@ -43,7 +47,8 @@ namespace SimProgrammingGrupo22.Models
             }
             catch
             {
-                // Em caso de erro, devolve lista vazia para não bloquear a aplicação
+                // Marca erro e devolve lista vazia
+                HouveErroLeitura = true;
                 return new List<Despesa>();
             }
         }

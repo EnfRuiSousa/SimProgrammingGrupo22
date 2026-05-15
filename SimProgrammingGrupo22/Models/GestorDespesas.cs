@@ -22,6 +22,19 @@ namespace SimProgrammingGrupo22.Models
             _despesas = _repo.LerDespesas();
         }
 
+        public string AvisoInicial
+        {
+            get
+            {
+                if (_repo.HouveErroLeitura)
+                {
+                    return "Aviso: O ficheiro de dados estava corrompido. Os dados foram reiniciados. Por favor, verifique se precisa de recuperar informações anteriores.";
+                }
+                return string.Empty;
+            }
+        }
+
+
         /*  FUNÇÃO AdicionarDespesa(despesa) */
         // Este metodo teve que ser colocado como internal pois estava sempre a dar erros de acessibilidade, 
         // mesmo estando na mesma pasta
