@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SimProgrammingGrupo22.Models
 {
-    internal class JsonRepository
+    internal class JsonRepository : IRepositorioDespesas
     {
         // Caminho do ficheiro onde estão os dados 
         private readonly string _filePath;

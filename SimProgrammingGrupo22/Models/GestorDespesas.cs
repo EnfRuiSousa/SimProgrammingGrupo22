@@ -7,8 +7,8 @@ namespace SimProgrammingGrupo22.Models
     /* FUNÇÃO GestorDespesas */
     public class GestorDespesas
     {
-        // Ficheiro JSON onde as despesas são guardadas
-        private readonly JsonRepository _repo;
+        // Ficheiro JSON onde as despesas são guardadas via abstração
+        private readonly IRepositorioDespesas _repo;
 
         // Lista em memória das despesas (concreta, continua a usar Despesa)
         private readonly List<Despesa> _despesas;
