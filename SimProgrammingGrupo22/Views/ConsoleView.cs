@@ -10,12 +10,12 @@ namespace SimProgrammingGrupo22.Views
 
     public class ConsoleView
     {
-        public event SemParametrosHandler AdicionarDespesaSolicitada;
-        public event DespesaHandler DespesaIntroduzida;
-        public event SemParametrosHandler ListagemDespesasSolicitada;
-        public event SemParametrosHandler ListagemPorCategoriaSolicitada;
-        public event SemParametrosHandler TotalDespesasSolicitado;
-        public event SemParametrosHandler SaidaSolicitada;
+        public event SemParametrosHandler? AdicionarDespesaSolicitada;
+        public event DespesaHandler? DespesaIntroduzida;
+        public event SemParametrosHandler? ListagemDespesasSolicitada;
+        public event SemParametrosHandler? ListagemPorCategoriaSolicitada;
+        public event SemParametrosHandler? TotalDespesasSolicitado;
+        public event SemParametrosHandler? SaidaSolicitada;
 
         public void Iniciar()
         {
@@ -84,7 +84,7 @@ namespace SimProgrammingGrupo22.Views
             do
             {
                 Console.Write("Descrição: ");
-                descricao = Console.ReadLine();
+                descricao = Console.ReadLine() ?? "";
 
                 if (string.IsNullOrWhiteSpace(descricao))
                 {
