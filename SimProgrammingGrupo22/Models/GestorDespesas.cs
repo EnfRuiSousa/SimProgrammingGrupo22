@@ -42,11 +42,31 @@ namespace SimProgrammingGrupo22.Models
         {
             if (despesa == null) throw new ArgumentNullException(nameof(despesa));
 
+            ValidarDespesa(despesa);
+
             // 1) Atualiza a lista em memória
             _despesas.Add(despesa);
 
             // 2) Persiste a lista no ficheiro JSON (pode lançar em caso de I/O)
             _repo.GuardarDespesas(_despesas);
+        }
+
+        private void ValidarDespesa(Despesa despesa)
+        {
+            if (string.IsNullOrWhiteSpace(despesa.Descricao))
+            {
+                throw new ValidacaoDespesaException("A descrição da despesa não pode ser vazia.");
+            }
+
+            if (despesa.Valor <= 0m)
+            {
+                throw new ValidacaoDespesaException("O valor da despesa deve ser superior a zero.");
+            }
+
+            if (despesa.Data == default)
+            {
+                throw new ValidacaoDespesaException("A data da despesa não é válida.");
+            }
         }
 
         /* FUNÇÃO ObterTodasDespesas */
