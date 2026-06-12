@@ -51,11 +51,6 @@ public class DespesaController
             // Erros de validacao sao apresentados ao utilizador de forma clara.
             view.MostrarMensagem($"Erro de validação: {ex.Message}");
         }
-        catch (ErroPersistenciaException ex)
-        {
-            // Erros de JSON/persistencia sao tratados sem terminar abruptamente a aplicacao.
-            view.MostrarMensagem($"Erro ao guardar os dados: {ex.Message}");
-        }
         catch (Exception)
         {
             // Proteccao final para erros inesperados.
